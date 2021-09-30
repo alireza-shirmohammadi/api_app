@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 @api_view(['GET'])
 def user_exist_actknowlage(request):
     email=request.data['email']
-    device = request.data['device']
+    device = request.data.get('device')
     actknwolage=UserProfile.objects.filter(email=email).exists()
     print(actknwolage)
     return Response(data=actknwolage, status=status.HTTP_200_OK)
@@ -27,7 +27,7 @@ def create_user(request):
     phone=request.data['phone']
     name=request.data['name']
     last_name=request.data['last_name']
-    device = request.data['device']
+    device = request.data.get('device')
     if not User.objects.filter(username=user_name).exists():
         user=User.objects.create_user(username=user_name,password=password)
         UserProfile.objects.create(user_name=user,phone=phone,name=name,last_name=last_name,
@@ -40,7 +40,7 @@ def create_user(request):
 def user_login(request):
     user_name=request.data['username']
     password = request.data['password']
-    device = request.data['device']
+    device = request.data.get('device')
     user=authenticate(username=user_name, password=password)
     if user :
         token , created =Token.objects.get_or_create(user=user)
